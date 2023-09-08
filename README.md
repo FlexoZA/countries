@@ -25,3 +25,9 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Start the Tailwind CLI build process
+
+The CLI tool to scan your template files for classes and build your CSS.
+Run `npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch`
+For mor info https://tailwindcss.com/docs/installation
