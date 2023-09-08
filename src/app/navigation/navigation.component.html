@@ -1,0 +1,32 @@
+<!-- navigation.component.html -->
+<nav class="flex items-center justify-between bg-gray-800 px-4 py-3">
+  <div class="flex items-center text-white">
+    <i class="material-icons">public</i>
+    <span class="text-white font-semibold">Countries of the World</span>
+  </div>
+  <button
+    (click)="openModal()"
+    class="material-icons text-white hover:bg-green-400 rounded-full transition duration-300"
+  >
+    more_vert
+  </button>
+</nav>
+
+<!-- Modal backdrop -->
+<div
+  [ngClass]="{ modal: true, active: isModalOpen }"
+  class="fixed inset-0 flex items-center justify-center z-50"
+>
+  <!-- Modal content -->
+  <div class="bg-white p-4 shadow-md w-1/2">
+    <h2 class="text-lg font-semibold mb-4">General info</h2>
+    <p>Modal content goes here.</p>
+    <!-- Close button -->
+    <button
+      (click)="closeModal()"
+      class="mt-4 bg-gray-300 hover:bg-red-400 text-gray-800 font-semibold w-full py-2 block flex items-center justify-center"
+    >
+      <i class="material-icons mr-2">close</i> Close
+    </button>
+  </div>
+</div>
