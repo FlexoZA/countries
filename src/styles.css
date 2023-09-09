@@ -4,3 +4,7 @@
 
 /* Material icons */
 @import "~material-icons/iconfont/material-icons.css";
+
+body {
+  background-color: whitesmoke;
+}

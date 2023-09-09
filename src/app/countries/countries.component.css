@@ -1,0 +1,32 @@
+.fade {
+  background: linear-gradient(transparent, rgba(255, 255, 255, 0.9));
+}
+
+.pagination-container {
+  text-align: right;
+}
+
+.pagination {
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.page-item {
+  display: inline;
+  margin: 0 5px; /* Adjust the spacing between page items */
+}
+
+.page-item a {
+  text-decoration: none;
+  background-color: #f0f0f0;
+  padding: 5px 10px; /* Adjust the padding as needed */
+  border: 1px solid #ccc;
+  color: #333;
+}
+
+.page-item a:hover {
+  background-color: #333;
+  color: #fff;
+}
