@@ -11,29 +11,33 @@
 
 <!-- country grid -->
 <div
-  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10"
 >
   <div
-    class="bg-white-300 lg:hover:scale-105 transition duration-200 pl-2 pr-2 sm:pl-0 sm:pr-0"
+    *ngFor="let country of countryData"
+    class="bg-white pl-2 pr-2 sm:pl-0 sm:pr-0 flex flex-col justify-between h-full"
   >
-    <img
-      src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2d/Flag_of_the_Basque_Country.svg/2560px-Flag_of_the_Basque_Country.svg.png"
-      alt="Image Alt Text"
-      class="scale-100"
-    />
-    <p class="text-xl text-sky-400">South Africa</p>
+    <p class="text-xl pb-2 pt-2 pl-2">{{ country.name }}</p>
+    <div class="lg:hover:scale-105 transition duration-300 bg-stone-700">
+      <img
+        class="w-full object-cover h-40 grayscale transition-transform duration-300 ease-in-out transform hover:grayscale-0"
+        [src]="country.flagUrl"
+        alt="Flag of {{ country.name }}"
+      />
+    </div>
+    <div class="flex">
+      <button
+        class="flex-grow bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-none"
+      >
+        More info
+      </button>
+      <button
+        class="flex-grow bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-none"
+      >
+        Favourite
+      </button>
+    </div>
   </div>
-  <div class="bg-gray-300">01</div>
-  <div class="bg-gray-300">01</div>
-  <div class="bg-gray-300">01</div>
-  <div class="bg-gray-300">01</div>
-  <div class="bg-gray-300">01</div>
-  <div class="bg-gray-300">01</div>
-  <div class="bg-gray-300">01</div>
-  <div class="bg-gray-300">01</div>
-  <div class="bg-gray-300">01</div>
-  <div class="bg-gray-300">01</div>
-  <div class="bg-gray-300">01</div>
 </div>
 <!-- //country grid -->
 
