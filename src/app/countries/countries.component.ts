@@ -24,8 +24,8 @@ export class CountriesComponent implements OnInit {
   paginatedCountryData: CountryData[] = [];
   itemsPerPage = 15; // Sets the number of items per page on pagination
   currentPage = 1; // Initializes current page to 1 on pagination
-  totalPages = Math.ceil(this.countryData.length / this.itemsPerPage); // Calculate the total number of pages
-  visiblePages = Array.from({ length: this.totalPages }, (_, i) => i + 1); // Create an array of visible page numbers
+  totalPages: number = 0;
+  visiblePages: number[] = []; // Initialize visiblePages as an empty array
 
   constructor(
     private countriesService: CountriesService,
@@ -53,6 +53,13 @@ export class CountriesComponent implements OnInit {
         .sort((a: { name: string }, b: { name: string }) =>
           a.name.localeCompare(b.name)
         ); // Sort alphabetically
+
+      this.totalPages = Math.ceil(this.countryData.length / this.itemsPerPage); // Calculate the total number of pages
+      this.visiblePages = Array.from(
+        { length: this.totalPages },
+        (_, i) => i + 1
+      ); // Create an array of visible page numbers
+      console.log('Total pages:' + this.totalPages);
 
       // Debugging: Log the populated countryData array.
       console.log('countryData:', this.countryData);
