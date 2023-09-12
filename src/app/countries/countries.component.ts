@@ -20,6 +20,12 @@ export class CountriesComponent implements OnInit {
   countryData: CountryData[] = [];
   isLoading: boolean = true; // Initialize isLoading as true
   notificationMessage: string | null = null; // Notification message
+  // Pagination
+  paginatedCountryData: CountryData[] = [];
+  itemsPerPage = 15; // Sets the number of items per page on pagination
+  currentPage = 1; // Initializes current page to 1 on pagination
+  totalPages = Math.ceil(this.countryData.length / this.itemsPerPage); // Calculate the total number of pages
+  visiblePages = Array.from({ length: this.totalPages }, (_, i) => i + 1); // Create an array of visible page numbers
 
   constructor(
     private countriesService: CountriesService,
@@ -28,6 +34,7 @@ export class CountriesComponent implements OnInit {
 
   ngOnInit() {
     this.getCountries();
+    this.applyPagination();
   }
 
   async getCountries() {
@@ -53,10 +60,43 @@ export class CountriesComponent implements OnInit {
       // Set isLoading to false when loading is complete
       this.isLoading = false;
       console.log('Loading completed');
+
+      // Init pagination
+      this.applyPagination();
     } catch (error) {
       console.error('Error:', error);
       // Ensure isLoading is set to false even in case of an error
       this.isLoading = false;
+    }
+  }
+
+  applyPagination() {
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    this.paginatedCountryData = this.countryData.slice(startIndex, endIndex);
+  }
+
+  // Function to go to a specific page
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.applyPagination(); // Apply pagination when changing pages
+    }
+  }
+
+  // Function to go to the previous page
+  previousPage() {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.applyPagination(); // Apply pagination when changing pages
+    }
+  }
+
+  // Function to go to the next page
+  nextPage() {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.applyPagination(); // Apply pagination when changing pages
     }
   }
 
