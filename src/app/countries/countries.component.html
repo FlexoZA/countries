@@ -1,46 +1,102 @@
-<!-- search and filter -->
-<div class="flex items-center justify-between mb-6">
-  <input type="text" placeholder="Search" class="w-3/4 p-2" />
-  <select class="w-1/4 p-2">
-    <option value="option1">Option 1</option>
-    <option value="option2">Option 2</option>
-    <option value="option3">Option 3</option>
-  </select>
-</div>
-<!-- //search and filter -->
-
-<!-- country grid -->
+<!-- Todo: Cleanup css -->
+<!-- Loading indicator (This should have it's own Component/service)-->
 <div
-  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10"
+  *ngIf="isLoading; else content"
+  class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
 >
-  <div
-    *ngFor="let country of countryData"
-    class="bg-white pl-2 pr-2 sm:pl-0 sm:pr-0 flex flex-col justify-between h-full"
-  >
-    <p class="text-xl pb-2 pt-2 pl-2">{{ country.name }}</p>
-    <div class="lg:hover:scale-105 transition duration-300 bg-stone-700">
-      <img
-        class="w-full object-cover h-40 grayscale transition-transform duration-300 ease-in-out transform hover:grayscale-0"
-        [src]="country.flagUrl"
-        alt="Flag of {{ country.name }}"
-      />
+  <div class="lds-ring mb-4">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  <div class="text-xl text-white">...Please wait while loading</div>
+</div>
+<!-- //Loading indicator -->
+
+<!-- Notification (This should have it's own Component/service) -->
+<div
+  *ngIf="notificationMessage"
+  class="fixed top-4 right-4 bg-white shadow-md p-4 max-w-sm min-w-[250px] border-b-4 border-green-500"
+>
+  <div class="flex items-center justify-between">
+    <div class="flex items-center">
+      <i class="material-icons text-green-500 mr-2">done</i>
+      <!-- Message -->
+      <p class="text-gray-700">{{ notificationMessage }}</p>
     </div>
-    <div class="flex">
-      <button
-        class="flex-grow bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-none"
-      >
-        More info
-      </button>
-      <button
-        class="flex-grow bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-none"
-      >
-        Favourite
-      </button>
-    </div>
+    <button
+      class="text-gray-500 hover:text-red-500 pt-2"
+      (click)="notificationMessage = null"
+    >
+      <i class="material-icons">close</i>
+    </button>
   </div>
 </div>
+<!--//Notification -->
+
+<ng-template #content>
+  <!-- search and filter -->
+  <div class="flex items-center justify-between mb-6">
+    <input type="text" placeholder="Search" class="w-3/4 p-2" />
+    <!-- Filter by region -->
+    <select class="w-1/4 p-2">
+      <option value="option1">Option 1</option>
+      <option value="option2">Option 2</option>
+      <option value="option3">Option 3</option>
+    </select>
+    <!-- //Filter by region -->
+  </div>
+  <!-- //search and filter -->
+
+  <!-- Country grid -->
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10"
+  >
+    <div
+      *ngFor="let country of countryData"
+      class="bg-white pl-2 pr-2 sm:pl-0 sm:pr-0 flex flex-col justify-between h-full"
+    >
+      <div class="flex items-center" *ngIf="isFavourite(country.name)">
+        <i class="material-icons text-red-400">favorite</i>
+        <p class="text-xl pb-2 pt-2 pl-2">{{ country.name }}</p>
+      </div>
+      <div class="flex items-center" *ngIf="!isFavourite(country.name)">
+        <p class="text-xl pb-2 pt-2 pl-2">{{ country.name }}</p>
+      </div>
+
+      <div class="lg:hover:scale-105 transition duration-300 bg-stone-700">
+        <img
+          class="w-full object-cover h-40 grayscale transition-transform duration-300 ease-in-out transform hover:grayscale-0"
+          [src]="country.flagUrl"
+          alt="Flag of {{ country.name }}"
+        />
+      </div>
+      <!-- Buttons -->
+      <div class="flex">
+        <button
+          class="flex-grow bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-none flex items-center justify-center"
+        >
+          <i class="material-icons">info</i>
+        </button>
+        <!-- Favourite button -->
+        <button
+          class="flex-grow text-white font-bold py-2 px-4 rounded-none flex items-center justify-center bg-green-500 hover:bg-green-700"
+          (click)="saveFavourite(country)"
+        >
+          <i
+            class="material-icons text-{{
+              isFavourite(country.name) ? 'red' : 'white'
+            }}-400"
+          >
+            favorite
+          </i>
+        </button>
+        <!-- //Favourite button -->
+      </div>
+      <!-- //Buttons -->
+    </div>
+  </div>
+</ng-template>
+<!-- //#Content -->
 <!-- //country grid -->
-
-<!-- pagination -->
-
-<!-- //pagination -->
