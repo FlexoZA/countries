@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CountriesService } from '../services/countries.service';
-import { LocalStorageService } from '../services/local-storage.service';
+import { LocalStorageService } from '../services/local-storage/local-storage.service';
 import { FavoriteService } from '../services/favorite/favorite.service';
 
 interface CountryData {
@@ -37,7 +37,7 @@ export class CountriesComponent implements OnInit {
     this.getCountries().then(() => {
       this.filterCountriesByRegion();
     });
-    this.favoriteCountries = this.favoriteService.loadFavoriteCountries();
+    this.favoriteCountries = this.favoriteService.getFavoriteCountries();
   }
 
   // Gets all the countries and required data

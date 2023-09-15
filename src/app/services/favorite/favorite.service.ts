@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LocalStorageService } from '../local-storage.service';
+import { LocalStorageService } from '../local-storage/local-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +8,7 @@ export class FavoriteService {
   constructor(private localStorageService: LocalStorageService) {}
 
   // Function to load favorite countries from local storage
-  loadFavoriteCountries(): string[] {
+  getFavoriteCountries(): string[] {
     // Retrieve favorite countries from local storage
     const favorites =
       this.localStorageService.getItem('favoriteCountries') || [];
@@ -18,7 +18,7 @@ export class FavoriteService {
 
   // Function to add a country to favorites
   addToFavorites(countryName: string): void {
-    let favorites = this.loadFavoriteCountries();
+    let favorites = this.getFavoriteCountries();
 
     // Check if the country is already in favorites
     if (!favorites.includes(countryName)) {
@@ -32,7 +32,7 @@ export class FavoriteService {
 
   // Function to remove a country from favorites
   removeFromFavorites(countryName: string): void {
-    let favorites = this.loadFavoriteCountries();
+    let favorites = this.getFavoriteCountries();
 
     // Check if the country is in favorites
     if (favorites.includes(countryName)) {
