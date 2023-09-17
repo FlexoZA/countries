@@ -1,22 +1,50 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '../local-storage/local-storage.service';
+import { CountryDataService } from '../country-data/country-data.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FavoriteService {
-  constructor(private localStorageService: LocalStorageService) {}
+  private favoriteData: any[] = [];
 
-  // Function to load favorite countries from local storage
+  constructor(
+    private localStorageService: LocalStorageService,
+    private countryDataService: CountryDataService
+  ) {}
+
+  // Fetches all country data, filters it based on FIFA codes stored in local-storage
+  async getAndFilterFavorites(): Promise<any> {
+    try {
+      // Get all country data
+      const allCountries = await this.countryDataService.getAllCountriesData();
+
+      // Get cca2/id data from local storag
+      let id = this.localStorageService.getItem('favoriteCountries') || [];
+
+      // Filter the country data by cca2 code
+      this.favoriteData = allCountries.filter((country) =>
+        id.includes(country.id)
+      );
+
+      // Log the filtered data
+      console.log('Filtered favorite Data:', this.favoriteData);
+      return this.favoriteData;
+    } catch (error) {
+      console.error('Error:', error);
+      return error;
+    }
+  }
+
+  // Get favorite countries from local storage
   getFavoriteCountries(): string[] {
-    // Retrieve favorite countries from local storage
     const favorites =
       this.localStorageService.getItem('favoriteCountries') || [];
 
     return favorites;
   }
 
-  // Function to add a country to favorites
+  // Add a country to favorites
   addToFavorites(countryName: string): void {
     let favorites = this.getFavoriteCountries();
 

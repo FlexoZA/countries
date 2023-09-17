@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CountryDataService } from '../services/country-data/country-data.service';
+import { FavoriteService } from '../services/favorite/favorite.service';
 
 @Component({
   selector: 'app-favorites',
@@ -7,17 +7,20 @@ import { CountryDataService } from '../services/country-data/country-data.servic
   styleUrls: ['./favorites.component.css'],
 })
 export class FavoritesComponent implements OnInit {
-  countryData: any[] = [];
+  favoriteData: any[] = [];
+  noFavoritesMessage = 'This will load the add multiple component';
 
-  constructor(private countryDataService: CountryDataService) {}
+  constructor(private favoriteService: FavoriteService) {}
 
-  ngOnInit(): void {
-    this.countryData = this.countryDataService.getCountry();
+  ngOnInit() {
+    this.loadFavoriteData();
   }
 
-  getCountriesFromCountryData() {
-    // Extract only the names
-    const countryNames = this.countryData.map((country) => country.name);
-    console.log(countryNames);
+  async loadFavoriteData() {
+    try {
+      this.favoriteData = await this.favoriteService.getAndFilterFavorites();
+    } catch (error) {
+      console.error('Could not load favorite data:', error);
+    }
   }
 }
