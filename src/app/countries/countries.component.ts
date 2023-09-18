@@ -4,12 +4,14 @@ import { LocalStorageService } from '../services/local-storage/local-storage.ser
 import { FavoriteService } from '../services/favorite/favorite.service';
 
 interface CountryData {
+  id: string;
   name: string;
   coatOfArmsUrl?: string;
   flagUrl?: string;
   region: string;
   fifa: string;
   population: string;
+  isFavorite: boolean;
 }
 
 @Component({
@@ -47,9 +49,10 @@ export class CountriesComponent implements OnInit {
       const response = await this.countriesService.get('all');
       const responseData = response.data;
 
-      // Mapping and sorting
+      // Mapping and sorting (cca2 is used as id)
       this.countryData = responseData
         .map((item: any) => ({
+          id: item.cca2,
           name: item.name.common,
           flagUrl: item.flags.svg,
           coatOfArmsUrl: item.coatOfArms.svg,
@@ -130,17 +133,14 @@ export class CountriesComponent implements OnInit {
   }
 
   // Check if country is a favorite
-  isFavorite(countryName: string): boolean {
+  isFavorite(countryId: string) {
     let favorites = this.localStorageService.getItem('favoriteCountries') || [];
-
-    return favorites.includes(countryName);
+    return favorites.includes(countryId);
   }
 
   // Save favorite countries to local storage
   saveFavorite(country: CountryData) {
-    console.log('Checking country object:', country);
-
-    const inputCountryName = country.name;
+    const inputCountryId = country.id;
 
     // Debuging check selected country name
     console.log('selected country', country.name);
@@ -148,18 +148,18 @@ export class CountriesComponent implements OnInit {
     let favorites = this.localStorageService.getItem('favoriteCountries') || [];
 
     // Check if the country is already in favorites
-    if (!favorites.includes(inputCountryName)) {
+    if (!favorites.includes(inputCountryId)) {
       // Add the new favorite country to the array
-      favorites.push(inputCountryName);
+      favorites.push(inputCountryId);
       // Store the entire favorites array in local storage
       this.localStorageService.setItem('favoriteCountries', favorites);
-      this.notificationMessage = `${inputCountryName} added to favorites`;
+      this.notificationMessage = `${country.name} added to favorites`;
     } else {
       // Remove the country name from favorites
-      favorites = favorites.filter((name: string) => name !== inputCountryName);
+      favorites = favorites.filter((name: string) => name !== inputCountryId);
       // Update local storage with the modified favorites array
       this.localStorageService.setItem('favoriteCountries', favorites);
-      this.notificationMessage = `${inputCountryName} removed from favorites`;
+      this.notificationMessage = `${country.name} removed from favorites`;
     }
 
     setTimeout(() => {

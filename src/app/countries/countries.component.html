@@ -80,10 +80,7 @@
       class="bg-white pl-2 pr-2 sm:pl-0 sm:pr-0 flex flex-col justify-between h-full"
     >
       <!-- Item header -->
-      <div
-        class="flex items-center bg-gray-200"
-        *ngIf="isFavorite(country.name)"
-      >
+      <div class="flex items-center bg-gray-200" *ngIf="isFavorite(country.id)">
         <i class="material-icons text-red-400 pl-2">favorite</i>
         <p
           class="text-xl pb-2 pt-2 pl-2 overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]"
@@ -93,7 +90,7 @@
       </div>
       <div
         class="flex items-center bg-gray-200"
-        *ngIf="!isFavorite(country.name)"
+        *ngIf="!isFavorite(country.id)"
       >
         <p
           class="text-xl pb-2 pt-2 pl-2 overflow-hidden overflow-ellipsis whitespace-nowrap max-w-[200px]"
@@ -135,7 +132,7 @@
           >
             <i
               class="material-icons text-{{
-                isFavorite(country.name) ? 'red' : 'white'
+                isFavorite(country.id) ? 'red' : 'white'
               }}-400"
             >
               favorite
