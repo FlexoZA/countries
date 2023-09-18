@@ -13,7 +13,7 @@ export class FavoriteService {
     private countryDataService: CountryDataService
   ) {}
 
-  // Fetches all country data, filters it based on FIFA codes stored in local-storage
+  // Fetches all country data, filters it based on id/cca2 codes stored in local-storage
   async getAndFilterFavorites(): Promise<any> {
     try {
       // Get all country data
@@ -27,12 +27,37 @@ export class FavoriteService {
         id.includes(country.id)
       );
 
-      // Log the filtered data
-      console.log('Filtered favorite Data:', this.favoriteData);
+      // ::Debug Log the filtered data
+      console.log('Debug:: Filtered favorite Data:', this.favoriteData);
       return this.favoriteData;
     } catch (error) {
       console.error('Error:', error);
       return error;
+    }
+  }
+
+  // Extracts the name of the favorite counties
+  async getFavoriteCountryNamesById(): Promise<string[]> {
+    try {
+      // Get all country data
+      const allCountries = await this.countryDataService.getAllCountriesData();
+
+      // Get the IDs from local storage
+      const favoriteIds: string[] =
+        this.localStorageService.getItem('favoriteCountries') || [];
+
+      // Filter the country data to include only the favorites
+      const favoriteCountries = allCountries.filter((country) =>
+        favoriteIds.includes(country.id)
+      );
+
+      // Extract the names of the favorite countries
+      const favoriteNames = favoriteCountries.map((country) => country.name);
+
+      return favoriteNames;
+    } catch (error) {
+      console.error('Error:', error);
+      return [];
     }
   }
 
