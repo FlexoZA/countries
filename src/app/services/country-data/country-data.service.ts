@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-import { GetCountryDataService } from './get-country-data.service';
+import { ApiService } from '../../api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CountryDataService {
   private countryData: any[] = [];
-  private isLoading: boolean = false;
+  private region: string[] = [];
 
-  constructor(private getCountryDataService: GetCountryDataService) {}
+  constructor(private apiService: ApiService) {}
 
   // Gets all the countries and required data
   async getAllCountriesData() {
     try {
       console.log('Loading started');
-      const response = await this.getCountryDataService.get('all');
+      const response = await this.apiService.get('all');
       const responseData = response.data;
 
       // Mapping and sorting (Using cca2 as id)
@@ -33,20 +33,27 @@ export class CountryDataService {
         ); // Sort alphabetically
 
       // Set isLoading to false when loading is complete
-      this.isLoading = false;
       console.log('Loading completed');
 
       return this.countryData;
     } catch (error) {
       console.error('Error:', error);
       // Ensure isLoading is set to false even in case of an error
-      this.isLoading = false;
       return [];
     }
   }
 
-  // Checks if data is loading
-  isLoadingData(): boolean {
-    return this.isLoading;
+  // Returns alll country data
+  getCountries() {
+    return this.countryData;
+  }
+
+  // Extracts regions
+  getAllregions() {
+    this.region = Array.from(
+      new Set(this.countryData.map((country) => country.region))
+    ).sort();
+
+    return this.region;
   }
 }

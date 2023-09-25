@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { CountryDataService } from '../country-data/country-data.service';
+import { Subject, from } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FavoriteService {
   private favoriteData: any[] = [];
+  name: string[] = [];
+  favoriteNamesChanged = new Subject<string[]>();
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -27,8 +30,11 @@ export class FavoriteService {
         id.includes(country.id)
       );
 
-      // ::Debug Log the filtered data
-      console.log('Debug:: Filtered favorite Data:', this.favoriteData);
+      // Extracts all favorites names
+      this.name = Array.from(
+        new Set(this.favoriteData.map((country) => country.name))
+      ).sort();
+
       return this.favoriteData;
     } catch (error) {
       console.error('Error:', error);
@@ -36,29 +42,37 @@ export class FavoriteService {
     }
   }
 
-  // Extracts the name of the favorite counties
-  async getFavoriteCountryNamesById(): Promise<string[]> {
-    try {
-      // Get all country data
-      const allCountries = await this.countryDataService.getAllCountriesData();
+  // Extracts the name of the favorite counties from API and local-host
+  getFavoriteCountryNamesById() {
+    return from(
+      (async () => {
+        try {
+          // Get all country data
+          const allCountries =
+            await this.countryDataService.getAllCountriesData();
 
-      // Get the IDs from local storage
-      const favoriteIds: string[] =
-        this.localStorageService.getItem('favoriteCountries') || [];
+          // Get the IDs from local storage
+          let favoriteIds =
+            this.localStorageService.getItem('favoriteCountries') || [];
 
-      // Filter the country data to include only the favorites
-      const favoriteCountries = allCountries.filter((country) =>
-        favoriteIds.includes(country.id)
-      );
+          // Filter the country data to include only the favorites
+          const favoriteCountries = allCountries.filter((country) =>
+            favoriteIds.includes(country.id)
+          );
 
-      // Extract the names of the favorite countries
-      const favoriteNames = favoriteCountries.map((country) => country.name);
+          // Extract the names of the favorite countries
+          const favoriteNames = favoriteCountries.map(
+            (country) => country.name
+          );
+          this.favoriteNamesChanged.next(favoriteNames);
 
-      return favoriteNames;
-    } catch (error) {
-      console.error('Error:', error);
-      return [];
-    }
+          return favoriteNames;
+        } catch (error) {
+          console.error('Error:', error);
+          return [];
+        }
+      })()
+    );
   }
 
   // Get favorite countries from local storage
@@ -67,33 +81,5 @@ export class FavoriteService {
       this.localStorageService.getItem('favoriteCountries') || [];
 
     return favorites;
-  }
-
-  // Add a country to favorites
-  addToFavorites(countryName: string): void {
-    let favorites = this.getFavoriteCountries();
-
-    // Check if the country is already in favorites
-    if (!favorites.includes(countryName)) {
-      // Add the new favorite country to the array
-      favorites.push(countryName);
-
-      // Store the entire favorites array in local storage
-      this.localStorageService.setItem('favoriteCountries', favorites);
-    }
-  }
-
-  // Function to remove a country from favorites
-  removeFromFavorites(countryName: string): void {
-    let favorites = this.getFavoriteCountries();
-
-    // Check if the country is in favorites
-    if (favorites.includes(countryName)) {
-      // Remove the country from the favorites array
-      favorites = favorites.filter((name) => name !== countryName);
-
-      // Update the local storage with the modified favorites array
-      this.localStorageService.setItem('favoriteCountries', favorites);
-    }
   }
 }

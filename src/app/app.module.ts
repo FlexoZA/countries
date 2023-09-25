@@ -8,14 +8,17 @@ import { AppComponent } from './app.component';
 import { NavigationComponent } from './navigation/navigation.component';
 import { CountriesComponent } from './countries/countries.component';
 import { FavoritesComponent } from './favorites/favorites.component';
+import { FavoriteBarComponent } from './favorites/favorite-bar/favorite-bar.component';
+import { SearchComponent } from './search/search.component';
 
 //SERVICES
+import { ApiService } from './api.service';
 import { LocalStorageService } from './services/local-storage/local-storage.service';
 import { CountryDataService } from './services/country-data/country-data.service';
-import { GetCountryDataService } from './services/country-data/get-country-data.service';
 
 //PIPES
 import { NumberFormatPipe } from './pipes/number-format.pipe';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 @NgModule({
   declarations: [
@@ -24,9 +27,12 @@ import { NumberFormatPipe } from './pipes/number-format.pipe';
     CountriesComponent,
     NumberFormatPipe,
     FavoritesComponent,
+    FavoriteBarComponent,
+    SearchComponent,
+    NotificationsComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
-  providers: [LocalStorageService, GetCountryDataService, CountryDataService],
+  providers: [LocalStorageService, ApiService, CountryDataService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

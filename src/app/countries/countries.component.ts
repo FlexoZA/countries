@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { CountriesService } from '../services/countries.service';
 import { LocalStorageService } from '../services/local-storage/local-storage.service';
 import { FavoriteService } from '../services/favorite/favorite.service';
+import { CountryDataService } from '../services/country-data/country-data.service';
 
 interface CountryData {
   id: string;
@@ -12,6 +12,7 @@ interface CountryData {
   fifa: string;
   population: string;
   isFavorite: boolean;
+  //countryData: string;  //TODO:: check if neccassary
 }
 
 @Component({
@@ -30,61 +31,31 @@ export class CountriesComponent implements OnInit {
   favoriteCountries: string[] = [];
 
   constructor(
-    private countriesService: CountriesService,
     private localStorageService: LocalStorageService,
-    private favoriteService: FavoriteService
+    private favoriteService: FavoriteService,
+    private countryDataService: CountryDataService
   ) {}
 
   ngOnInit() {
     this.getCountries().then(() => {
       this.filterCountriesByRegion();
+      this.region = this.countryDataService.getAllregions();
+      this.favoriteCountries = this.favoriteService.getFavoriteCountries();
     });
-    this.favoriteCountries = this.favoriteService.getFavoriteCountries();
   }
 
-  // Gets all the countries and required data
+  //Gets all countries and data
   async getCountries() {
     try {
-      console.log('Loading started');
-      const response = await this.countriesService.get('all');
-      const responseData = response.data;
-
-      // Mapping and sorting (cca2 is used as id)
-      this.countryData = responseData
-        .map((item: any) => ({
-          id: item.cca2,
-          name: item.name.common,
-          flagUrl: item.flags.svg,
-          coatOfArmsUrl: item.coatOfArms.svg,
-          region: item.region,
-          fifa: item.fifa,
-          population: item.population,
-        }))
-        .sort((a: { name: string }, b: { name: string }) =>
-          a.name.localeCompare(b.name)
-        ); // Sort alphabetically
-
-      // Extracts all the regions
-      this.region = Array.from(
-        new Set(this.countryData.map((country) => country.region))
-      ).sort();
-
-      // Debugging: Log the populated countryData array.
-      console.log('countryData:', this.countryData);
-
-      // Set isLoading to false when loading is complete
-      this.isLoading = false;
-      console.log('Loading completed');
+      this.countryData = await this.countryDataService.getAllCountriesData();
     } catch (error) {
-      console.error('Error:', error);
-      // Ensure isLoading is set to false even in case of an error
-      this.isLoading = false;
+      console.error('Could not load favorite data:', error);
     }
   }
 
   // Filter countries by Region
+  // TODO:: Move this to it's own component
   filterCountriesByRegion() {
-    console.log('Debug filterCountriesByRegion', this.countryData);
     this.isLoading = true;
     if (this.selectedRegion === 'all') {
       // Display all countries if "All Regions" is selected
@@ -104,9 +75,8 @@ export class CountriesComponent implements OnInit {
   }
 
   // Filter countries by name or FIFA
+  // TODO:: Move this to it's own component
   filterCountriesByNameOrFIFA() {
-    this.isLoading = true;
-
     // If no search term provided, display all countries
     if (!this.searchTerm) {
       this.filteredCountries = this.countryData;
@@ -128,22 +98,19 @@ export class CountriesComponent implements OnInit {
         fifaLower.includes(searchTermLower)
       );
     });
-
-    this.isLoading = false;
   }
 
   // Check if country is a favorite
+  // TODO:: Move this to it's own component
   isFavorite(countryId: string) {
     let favorites = this.localStorageService.getItem('favoriteCountries') || [];
     return favorites.includes(countryId);
   }
 
   // Save favorite countries to local storage
+  // TODO:: Move this to it's own component
   saveFavorite(country: CountryData) {
     const inputCountryId = country.id;
-
-    // Debuging check selected country name
-    console.log('selected country', country.name);
 
     let favorites = this.localStorageService.getItem('favoriteCountries') || [];
 

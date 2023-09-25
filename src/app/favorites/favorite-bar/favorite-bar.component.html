@@ -1,0 +1,17 @@
+<!-- Favorite bar -->
+<div class="mb-6 mt-6">
+  <p class="mb-2">
+    <a
+      routerLink="favorites"
+      class="text-white font-semibold hover:text-blue-400"
+      >Favorites</a
+    >
+  </p>
+  <span
+    *ngFor="let favorites of favoriteNames"
+    class="inline-flex items-center rounded-md px-2 mr-2 py-1 text-blue-400 ring-1 ring-inset ring-blue-500/30 mb-2"
+  >
+    {{ favorites }}
+  </span>
+</div>
+<!-- //Favorite bar -->
