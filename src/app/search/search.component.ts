@@ -48,12 +48,12 @@ export class SearchComponent {
 
   // Gets all countries and data
   async getCountries() {
-    this.countryData = this.countryDataService.getCountries();
+    this.countryData = await this.countryDataService.getCountries();
   }
 
   // Gets all main regions
   async getRegions() {
-    this.region = this.countryDataService.getAllregions();
+    this.region = await this.countryDataService.getAllregions();
   }
 
   // Filter countries by Region

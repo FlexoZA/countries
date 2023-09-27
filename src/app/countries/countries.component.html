@@ -1,3 +1,4 @@
+<app-notifications></app-notifications>
 <!-- Todo: Cleanup css -->
 <!-- Loading indicator (This should have it's own Component/service)-->
 <div
@@ -14,27 +15,6 @@
 </div>
 <!-- //Loading indicator -->
 
-<!-- Notification (This should have it's own Component/service) -->
-<div
-  *ngIf="notificationMessage"
-  class="fixed top-4 right-4 bg-white shadow-md p-4 max-w-sm min-w-[250px] border-b-4 border-green-500"
->
-  <div class="flex items-center justify-between">
-    <div class="flex items-center">
-      <i class="material-icons text-green-500 mr-2">done</i>
-      <!-- Message -->
-      <p class="text-gray-700">{{ notificationMessage }}</p>
-    </div>
-    <button
-      class="text-gray-500 hover:text-red-500 pt-2"
-      (click)="notificationMessage = null"
-    >
-      <i class="material-icons">close</i>
-    </button>
-  </div>
-</div>
-<!--//Notification -->
-
 <ng-template #content>
   <!-- search and filter -->
   <app-search></app-search>
@@ -47,7 +27,7 @@
     class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-10 mb-6"
   >
     <div
-      *ngFor="let country of filteredCountries"
+      *ngFor="let country of countryData"
       class="bg-white pl-2 pr-2 sm:pl-0 sm:pr-0 flex flex-col justify-between h-full"
     >
       <!-- Item header -->
@@ -99,7 +79,7 @@
           <!-- Favorite button -->
           <button
             class="flex-grow text-white font-bold py-2 px-4 rounded-none flex items-center justify-center bg-green-400 hover:bg-green-700"
-            (click)="saveFavorite(country)"
+            (click)="saveFavorite(country.id, country.name)"
           >
             <i
               class="material-icons text-{{

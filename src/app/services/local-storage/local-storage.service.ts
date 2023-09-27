@@ -13,8 +13,12 @@ export class LocalStorageService {
   }
 
   // Set data in local storage
-  setItem(key: string, value: any): void {
-    localStorage.setItem(key, JSON.stringify(value));
+  setItem(key: string, id: any): void {
+    const existingData = this.getItem(key) || [];
+    if (!existingData.includes(id)) {
+      const updatedData = [...existingData, id];
+      localStorage.setItem(key, JSON.stringify(updatedData));
+    }
   }
 
   // Set array data in local storage

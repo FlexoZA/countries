@@ -8,12 +8,13 @@ export class CountryDataService {
   private countryData: any[] = [];
   private region: string[] = [];
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService) {
+    this.getAllCountriesData();
+  }
 
   // Gets all the countries and required data
-  async getAllCountriesData() {
+  private async getAllCountriesData() {
     try {
-      console.log('Loading started');
       const response = await this.apiService.get('all');
       const responseData = response.data;
 
@@ -31,29 +32,23 @@ export class CountryDataService {
         .sort((a: { name: string }, b: { name: string }) =>
           a.name.localeCompare(b.name)
         ); // Sort alphabetically
-
-      // Set isLoading to false when loading is complete
-      console.log('Loading completed');
-
-      return this.countryData;
     } catch (error) {
       console.error('Error:', error);
-      // Ensure isLoading is set to false even in case of an error
-      return [];
     }
   }
 
   // Returns alll country data
-  getCountries() {
+  async getCountries() {
+    await this.getAllCountriesData();
     return this.countryData;
   }
 
   // Extracts regions
-  getAllregions() {
+  async getAllregions() {
+    await this.getAllCountriesData();
     this.region = Array.from(
       new Set(this.countryData.map((country) => country.region))
     ).sort();
-
     return this.region;
   }
 }

@@ -20,7 +20,7 @@ export class FavoriteService {
   async getAndFilterFavorites(): Promise<any> {
     try {
       // Get all country data
-      const allCountries = await this.countryDataService.getAllCountriesData();
+      const allCountries = await this.countryDataService.getCountries();
 
       // Get cca2/id data from local storag
       let id = this.localStorageService.getItem('favoriteCountries') || [];
@@ -48,8 +48,7 @@ export class FavoriteService {
       (async () => {
         try {
           // Get all country data
-          const allCountries =
-            await this.countryDataService.getAllCountriesData();
+          const allCountries = await this.countryDataService.getCountries();
 
           // Get the IDs from local storage
           let favoriteIds =
