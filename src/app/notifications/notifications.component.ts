@@ -17,13 +17,11 @@ export class NotificationsComponent implements OnInit {
       this.message = message;
       this.notificationVisible = true;
       this.notification();
-      console.log('It reaches here');
     });
   }
 
   notification() {
     setTimeout(() => {
-      console.log('DEBUG:: Notification time out');
       this.message = null;
       this.notificationVisible = false;
     }, 3000);

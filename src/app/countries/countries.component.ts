@@ -21,11 +21,16 @@ interface CountryData {
 })
 export class CountriesComponent implements OnInit {
   countryData: CountryData[] = [];
-  isLoading: boolean = false; // Initialize isLoading as true
+  isLoading: boolean = false;
   countryId: string[] = [];
   notificationVisible: boolean = false;
   notificationMessage: string = '';
-  isModalOpen = false;
+  isRemoveModalOpen: boolean = false;
+  currentPage: number = 1;
+  itemsPerPage: number = 15;
+  totalItems: number = 0;
+  favoriteToRemove: string = ''; // Used in Dialog
+  favoriteName: string = ''; // Used in Dialog
 
   constructor(
     private localStorageService: LocalStorageService,
@@ -37,9 +42,32 @@ export class CountriesComponent implements OnInit {
     this.getCountries();
   }
 
-  //Gets all countries
+  // Update your getCountries method
   async getCountries() {
     this.countryData = await this.countryDataService.getCountries();
+    this.totalItems = this.countryData.length;
+  }
+
+  // Calculate the total number of pages in a getter property
+  get totalPages(): number {
+    return Math.ceil(this.totalItems / this.itemsPerPage);
+  }
+
+  // Disable logic for Previous and Next buttons
+  isPreviousButtonDisabled(): boolean {
+    return this.currentPage === 1;
+  }
+
+  isNextButtonDisabled(): boolean {
+    return this.currentPage === this.totalPages;
+  }
+
+  getPageNumbers(): number[] {
+    const pageNumbers: number[] = [];
+    for (let i = 1; i <= this.totalPages; i++) {
+      pageNumbers.push(i);
+    }
+    return pageNumbers;
   }
 
   // Check if country is a favorite
@@ -60,14 +88,27 @@ export class CountriesComponent implements OnInit {
     );
   }
 
-  removeFromFavorites(countryId: any, countryName: string): void {
+  removeFromFavorites(countryId: any): void {
     this.localStorageService.removeFromFavorites(
       'favoriteCountries',
       countryId
     );
     // notificationn
+    console.log('DEBUG:: RemoveFavorite', countryId);
     this.notificationService.displayNotification(
-      'Removed ' + countryName + ' from favorites'
+      'Removed ' + countryId + ' from favorites'
     );
+  }
+
+  openModal(countryId: string, countryName: string): void {
+    console.log('DEBUG::');
+    this.favoriteToRemove = countryId;
+    this.favoriteName = countryName;
+    this.isRemoveModalOpen = true;
+  }
+
+  closeModal() {
+    console.log('DEBUG:: Close Modal');
+    this.isRemoveModalOpen = false;
   }
 }
