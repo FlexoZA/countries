@@ -56,11 +56,13 @@
       </div>
       <!-- //Item header -->
       <!-- Item body -->
-      <div class="bg-gray-900 z-40">
-        <div class="lg:hover:scale-105 transition duration-300 relative">
+      <div class="bg-zinc-800">
+        <div
+          class="lg:hover:scale-105 transition duration-300 relative bg-zinc-800"
+        >
           <!-- Country flag -->
           <img
-            class="w-full object-cover h-40 grayscale transition-transform duration-300 ease-in-out transform hover:grayscale-0 z-40"
+            class="w-full object-cover text-white h-40 grayscale transition-transform duration-300 ease-in-out transform hover:grayscale-0 z-0"
             [src]="country.flagUrl"
             alt="Flag of {{ country.name }}"
           />
@@ -84,7 +86,11 @@
           <!-- Favorite button -->
           <button
             class="flex-grow text-white font-bold py-2 px-4 rounded-none flex items-center justify-center bg-green-400 hover:bg-green-700"
-            (click)="openModal(country.id, country.name)"
+            (click)="
+              isFavorite(country.id)
+                ? openModal(country.id, country.name)
+                : saveFavorite(country.id, country.name)
+            "
           >
             <i
               class="material-icons text-{{
@@ -111,7 +117,7 @@
               </p>
               <!-- buttons -->
               <button
-                (click)="removeFromFavorites(favoriteToRemove)"
+                (click)="removeFromFavorites(favoriteToRemove, favoriteName)"
                 class="mt-4 bg-red-400 hover:bg-red-600 text-white font-semibold w-full py-2 flex items-center justify-center"
               >
                 <i class="material-icons mr-2">delete</i> Remove
@@ -134,10 +140,18 @@
   </div>
 
   <!-- Pagination controls -->
-  <div class="flex justify-center mt-4 bg-gray-400 mt-6 mb-6">
+  <div class="flex justify-end mt-4 bg-gray-200 mt-6 mb-6">
     <button
-      class="mx-2 px-4 py-2 bg-gray-500 text-white hover:bg-gray-500"
-      [disabled]="isPreviousButtonDisabled()"
+      class="mx-2 px-4 py-2 text-gray-600 hover:bg-gray-500"
+      [disabled]="currentPage === 1"
+      (click)="currentPage = 1"
+    >
+      First
+    </button>
+
+    <button
+      class="mx-2 px-4 py-2 bg-gray-400 text-gray-600 hover:bg-gray-500"
+      [disabled]="currentPage === 1"
       (click)="currentPage = currentPage - 1"
     >
       Previous
@@ -146,8 +160,9 @@
     <!-- Display page numbers -->
     <ng-container *ngFor="let page of getPageNumbers()">
       <button
-        class="px-4 text-white hover:bg-gray-500"
-        [class.bg-gray-500]="currentPage === page"
+        *ngIf="displayPageNumber(page)"
+        class="px-4 text-gray-600 hover:bg-gray-500"
+        [class.bg-gray-400]="currentPage === page"
         (click)="currentPage = page"
       >
         {{ page }}
@@ -155,11 +170,19 @@
     </ng-container>
 
     <button
-      class="mx-2 px-4 py-2 bg-gray-500 text-white hover:bg-gray-500"
-      [disabled]="isNextButtonDisabled()"
+      class="mx-2 px-4 py-2 bg-gray-400 text-gray-600 hover:bg-gray-500"
+      [disabled]="currentPage === totalPages"
       (click)="currentPage = currentPage + 1"
     >
       Next
+    </button>
+
+    <button
+      class="mx-2 px-4 py-2 text-gray-600 hover:bg-gray-500"
+      [disabled]="currentPage === totalPages"
+      (click)="currentPage = totalPages"
+    >
+      Last
     </button>
   </div>
   <!-- //Pagination controls -->

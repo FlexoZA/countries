@@ -7,23 +7,27 @@ import { NotificationService } from '../services/notification/notification.servi
   styleUrls: ['./notifications.component.css'],
 })
 export class NotificationsComponent implements OnInit {
-  notificationVisible: boolean = false;
-  message: string | null = null;
+  notifications: { message: string; id: number }[] = [];
+  nextId = 0;
 
   constructor(private notificationService: NotificationService) {}
 
   ngOnInit() {
     this.notificationService.registerCallback((message) => {
-      this.message = message;
-      this.notificationVisible = true;
-      this.notification();
+      const id = this.nextId++;
+      this.notifications.push({ message, id });
+      this.notification(id);
     });
   }
 
-  notification() {
+  notification(id: number) {
     setTimeout(() => {
-      this.message = null;
-      this.notificationVisible = false;
+      this.notifications = this.notifications.filter(
+        (notification) => notification.id !== id
+      );
     }, 3000);
+  }
+  closeNotification() {
+    this.notifications = [];
   }
 }
