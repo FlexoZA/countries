@@ -42,43 +42,16 @@ export class FavoriteService {
     }
   }
 
-  // Extracts the name of the favorite counties from API and local-host
-  getFavoriteCountryNamesById() {
-    return from(
-      (async () => {
-        try {
-          // Get all country data
-          const allCountries = await this.countryDataService.getCountries();
+  async getFavoriteCountries() {
+    // Gets all countries
+    let allCountries = await this.countryDataService.getCountries();
+    // Gets all favorites from local storage
+    let allFavourites = this.localStorageService.getItem('favoriteCountries');
 
-          // Get the IDs from local storage
-          let favoriteIds =
-            this.localStorageService.getItem('favoriteCountries') || [];
-
-          // Filter the country data to include only the favorites
-          const favoriteCountries = allCountries.filter((country) =>
-            favoriteIds.includes(country.id)
-          );
-
-          // Extract the names of the favorite countries
-          const favoriteNames = favoriteCountries.map(
-            (country) => country.name
-          );
-          this.favoriteNamesChanged.next(favoriteNames);
-
-          return favoriteNames;
-        } catch (error) {
-          console.error('Error:', error);
-          return [];
-        }
-      })()
+    let favoriteCountries = allCountries.filter((country) =>
+      allFavourites.includes(country.id)
     );
-  }
 
-  // Get favorite countries from local storage
-  getFavoriteCountries(): string[] {
-    const favorites =
-      this.localStorageService.getItem('favoriteCountries') || [];
-
-    return favorites;
+    return favoriteCountries;
   }
 }

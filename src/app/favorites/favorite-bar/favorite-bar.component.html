@@ -8,10 +8,10 @@
     >
   </p>
   <span
-    *ngFor="let favorites of favoriteNames"
+    *ngFor="let favorite of favorites"
     class="inline-flex items-center rounded-md px-2 mr-2 py-1 text-blue-400 ring-1 ring-inset ring-blue-500/30 mb-2"
   >
-    {{ favorites }}
+    {{ favorite.name }}
   </span>
 </div>
 <!-- //Favorite bar -->

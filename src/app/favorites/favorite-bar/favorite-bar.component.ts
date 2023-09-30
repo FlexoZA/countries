@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FavoriteService } from '../../services/favorite/favorite.service';
+import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-favorite-bar',
@@ -7,25 +9,27 @@ import { FavoriteService } from '../../services/favorite/favorite.service';
   styleUrls: ['./favorite-bar.component.css'],
 })
 export class FavoriteBarComponent implements OnInit {
-  favoriteNames: string[] = [];
+  favorites: any[] = [];
+  subscription!: Subscription;
 
-  constructor(private favoriteService: FavoriteService) {}
+  constructor(
+    private favoriteService: FavoriteService,
+    private localStorageService: LocalStorageService
+  ) {}
 
   ngOnInit() {
-    this.favoriteService.favoriteNamesChanged.subscribe((names: string[]) => {
-      this.favoriteNames = names;
-    });
-    this.loadFavoriteNames();
+    this.subscription = this.localStorageService.favoriteCountries$.subscribe(
+      () => {
+        this.getFavorites();
+      }
+    );
   }
 
-  loadFavoriteNames() {
-    this.favoriteService.getFavoriteCountryNamesById().subscribe({
-      next: (names) => {
-        this.favoriteNames = names;
-      },
-      error: (error) => {
-        console.error('Could not load favorite data:', error);
-      },
-    });
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
+  }
+
+  async getFavorites() {
+    this.favorites = await this.favoriteService.getFavoriteCountries();
   }
 }

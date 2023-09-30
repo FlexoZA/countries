@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LocalStorageService {
-  constructor() {}
+  private favoriteCountriesSubject = new BehaviorSubject(
+    this.getItem('favoriteCountries')
+  );
+  favoriteCountries$ = this.favoriteCountriesSubject.asObservable();
 
   // Get data from local storage
   getItem(key: string): any {
@@ -19,6 +23,11 @@ export class LocalStorageService {
       const updatedData = [...existingData, id];
       localStorage.setItem(key, JSON.stringify(updatedData));
     }
+
+    // Update the state of the localStorage
+    if (key === 'favoriteCountries') {
+      this.favoriteCountriesSubject.next(id);
+    }
   }
 
   // Set array data in local storage
@@ -28,21 +37,16 @@ export class LocalStorageService {
       const updatedData = [...existingData, ...newData];
       localStorage.setItem(key, JSON.stringify(updatedData));
     }
+
+    // Update the state of the localStorage
+    if (key === 'favoriteCountries') {
+      this.favoriteCountriesSubject.next(newData);
+    }
   }
 
   isInFavorites(key: string, id: any): boolean {
     const existingData = this.getItem(key) || [];
     return existingData.includes(id);
-  }
-
-  // Remove data from local storage
-  // PLACHOLDER
-  removeItem(key: string, index: number): void {
-    const existingData = this.getItem(key) || [];
-    if (index >= 0 && index < existingData.length) {
-      existingData.splice(index, 1);
-      localStorage.setItem(key, JSON.stringify(existingData));
-    }
   }
 
   removeFromFavorites(key: string, id: any): void {
@@ -51,6 +55,11 @@ export class LocalStorageService {
     if (index !== -1) {
       existingData.splice(index, 1);
       localStorage.setItem(key, JSON.stringify(existingData));
+    }
+
+    // Update the state of the localStorage
+    if (key === 'favoriteCountries') {
+      this.favoriteCountriesSubject.next(id);
     }
   }
 }

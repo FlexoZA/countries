@@ -42,7 +42,6 @@ export class CountriesComponent implements OnInit {
     this.getCountries();
   }
 
-  // Update your getCountries method
   async getCountries() {
     this.countryData = await this.countryDataService.getCountries();
     this.totalItems = this.countryData.length;
