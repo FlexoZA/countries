@@ -1,5 +1,5 @@
 <!-- Favorite bar -->
-<div class="mb-6 mt-6">
+<div class="mb-4 mt-6">
   <p class="mb-2">
     <a
       routerLink="favorites"
@@ -13,5 +13,15 @@
   >
     {{ favorite.name }}
   </span>
+  <a
+    *ngIf="favorites.length != 0"
+    routerLink="favorites"
+    class="text-white text-s hover:text-blue-400"
+    >...view all</a
+  >
+  <!-- Display a message when there are no favorite countries -->
+  <p *ngIf="favorites.length === 0" class="text-white">
+    You have no favorite countries.
+  </p>
 </div>
 <!-- //Favorite bar -->

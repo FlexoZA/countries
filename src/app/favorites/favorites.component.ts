@@ -17,10 +17,6 @@ export class FavoritesComponent implements OnInit {
   }
 
   async loadFavoriteData() {
-    try {
-      this.favoriteData = await this.favoriteService.getAndFilterFavorites();
-    } catch (error) {
-      console.error('Could not load favorite data:', error);
-    }
+    this.favoriteData = await this.favoriteService.getAndFilterFavorites();
   }
 }
