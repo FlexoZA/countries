@@ -103,7 +103,7 @@ export class SearchComponent {
     }
   }
 
-  // Saves favotites
+  // Saves favorites
   saveSelectedCountries(): void {
     this.localStorageService.addTofavorites(
       'favoriteCountries',
