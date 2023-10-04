@@ -20,6 +20,7 @@ import { CountryDataService } from './services/country-data/country-data.service
 import { NumberFormatPipe } from './pipes/number-format.pipe';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { CountryComponent } from './country/country.component';
+import { LoadingComponent } from './loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { CountryComponent } from './country/country.component';
     SearchComponent,
     NotificationsComponent,
     CountryComponent,
+    LoadingComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [LocalStorageService, ApiService, CountryDataService],

@@ -1,19 +1,9 @@
 <app-notifications></app-notifications>
-<!-- Todo: Cleanup css -->
-<!-- Loading indicator (This should have it's own Component/service)-->
-<div
-  *ngIf="isLoading; else content"
-  class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center"
->
-  <div class="lds-ring mb-4">
-    <div></div>
-    <div></div>
-    <div></div>
-    <div></div>
-  </div>
-  <div class="text-xl text-white">...Please wait while loading</div>
+
+<!-- Loading -->
+<div *ngIf="isLoading; else content">
+  <app-loading></app-loading>
 </div>
-<!-- //Loading indicator -->
 
 <ng-template #content>
   <!-- search and filter -->
@@ -77,12 +67,12 @@
 
         <!-- Buttons -->
         <div class="flex">
-          <button
+          <a
+            [routerLink]="['country', country.id]"
             class="flex-grow bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded-none flex items-center justify-center"
           >
-            <i class="material-icons pr-2">group</i
-            >{{ country.population | numberFormat }}
-          </button>
+            <i class="material-icons pr-2">info</i>
+          </a>
           <!-- Favorite button -->
           <button
             class="flex-grow text-white font-bold py-2 px-4 rounded-none flex items-center justify-center bg-green-400 hover:bg-green-700"

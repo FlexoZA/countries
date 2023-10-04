@@ -1,1 +1,17 @@
-<p>country works!</p>
+<div *ngIf="isLoading; else content">
+  <app-loading></app-loading>
+</div>
+
+<ng-template #content>
+  <div *ngIf="country" class="bg-gray-400 p-4">
+    <h1 class="text-gray text-xl">
+      {{ country.name }} {{ country.population }}
+    </h1>
+    <a>Back home</a>
+  </div>
+
+  <!-- simple 404 -->
+  <div *ngIf="!country" class="bg-red-400 p-4">
+    <h1 class="text-gray text-xl">404 - Country not found</h1>
+  </div>
+</ng-template>

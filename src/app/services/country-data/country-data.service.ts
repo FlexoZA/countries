@@ -21,7 +21,7 @@ export class CountryDataService {
       // Mapping and sorting (Using cca2 as id)
       this.countryData = responseData
         .map((item: any) => ({
-          id: item.cca2,
+          id: item.cca2.toLowerCase(),
           name: item.name.common,
           flagUrl: item.flags.svg,
           coatOfArmsUrl: item.coatOfArms.svg,
@@ -41,6 +41,12 @@ export class CountryDataService {
   async getCountries() {
     await this.getAllCountriesData();
     return this.countryData;
+  }
+
+  // Returns single country
+  async getCountry(id: string) {
+    await this.getAllCountriesData();
+    return this.countryData.find((country) => country.id === id);
   }
 
   // Extracts regions
