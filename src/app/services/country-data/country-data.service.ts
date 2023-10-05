@@ -1,12 +1,19 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '../../api.service';
 
+interface Currency {
+  name: string;
+  symbol: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class CountryDataService {
   private countryData: any[] = [];
   private region: string[] = [];
+  private currencies: Currency[] | null = null;
+  //private timeZone: string[] = [];
 
   constructor(private apiService: ApiService) {
     this.getAllCountriesData();
@@ -28,7 +35,12 @@ export class CountryDataService {
           region: item.region,
           fifa: item.fifa,
           population: item.population,
+          capital: item.capital,
+          timeZones: item.timezones,
+          currency: item.currencies,
+          languages: item.languages,
         }))
+
         .sort((a: { name: string }, b: { name: string }) =>
           a.name.localeCompare(b.name)
         ); // Sort alphabetically
@@ -56,5 +68,22 @@ export class CountryDataService {
       new Set(this.countryData.map((country) => country.region))
     ).sort();
     return this.region;
+  }
+
+  // Extracts currencies for a specific country
+  async getCurrenciesForCountry(id: string) {
+    await this.getAllCountriesData();
+    const country = this.countryData.find((country) => country.id === id);
+    if (!country) {
+      throw new Error(`Country with id ${id} not found`);
+    }
+    const currencies = Object.entries(country.currencies).map(
+      ([code, currency]) => ({
+        code,
+        name: (currency as Currency).name,
+        symbol: (currency as Currency).symbol,
+      })
+    );
+    return currencies;
   }
 }

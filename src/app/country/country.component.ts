@@ -6,6 +6,18 @@ interface CountryData {
   id: string;
   name: string;
   population: number;
+  fifa: string;
+  capital: string;
+  region: string;
+  timeZones: string;
+  currencies: string;
+  languages: string;
+}
+
+interface CurrencyData {
+  code: string;
+  name: string;
+  symbol: string;
 }
 
 @Component({
@@ -17,6 +29,7 @@ export class CountryComponent {
   isLoading: boolean = true;
   country: CountryData | null = null;
   id: string | null = null;
+  currencies: CurrencyData[] | null = null;
 
   constructor(
     private countryDataService: CountryDataService,
@@ -29,6 +42,7 @@ export class CountryComponent {
       if (this.id) {
         this.getCountry();
       }
+      this.getCurrencies();
     });
   }
 
@@ -37,5 +51,14 @@ export class CountryComponent {
       this.country = await this.countryDataService.getCountry(this.id);
     }
     this.isLoading = false;
+  }
+
+  async getCurrencies() {
+    if (this.id) {
+      this.currencies = await this.countryDataService.getCurrenciesForCountry(
+        this.id
+      );
+    }
+    console.log(this.currencies);
   }
 }
