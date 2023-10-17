@@ -21,6 +21,7 @@ import { NumberFormatPipe } from './pipes/number-format.pipe';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { CountryComponent } from './country/country.component';
 import { LoadingComponent } from './loading/loading.component';
+import { TimeFormatPipe } from './pipes/time-format.pipe';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { LoadingComponent } from './loading/loading.component';
     NotificationsComponent,
     CountryComponent,
     LoadingComponent,
+    TimeFormatPipe,
   ],
   imports: [BrowserModule, AppRoutingModule, FormsModule],
   providers: [LocalStorageService, ApiService, CountryDataService],

@@ -12,14 +12,15 @@ interface Currency {
 export class CountryDataService {
   private countryData: any[] = [];
   private region: string[] = [];
-  private currencies: Currency[] | null = null;
+  private latlng: string[] = [];
+  //private currencies: Currency[] | null = null;
   //private timeZone: string[] = [];
 
   constructor(private apiService: ApiService) {
     this.getAllCountriesData();
   }
 
-  // Gets all the countries and required data
+  // Gets all the countries
   private async getAllCountriesData() {
     try {
       const response = await this.apiService.get('all');
@@ -39,6 +40,7 @@ export class CountryDataService {
           timeZones: item.timezones,
           currency: item.currencies,
           languages: item.languages,
+          capitalLatLong: item.capitalInfo.latlng,
         }))
 
         .sort((a: { name: string }, b: { name: string }) =>
@@ -55,12 +57,6 @@ export class CountryDataService {
     return this.countryData;
   }
 
-  // Returns single country
-  async getCountry(id: string) {
-    await this.getAllCountriesData();
-    return this.countryData.find((country) => country.id === id);
-  }
-
   // Extracts regions
   async getAllregions() {
     await this.getAllCountriesData();
@@ -70,20 +66,21 @@ export class CountryDataService {
     return this.region;
   }
 
-  // Extracts currencies for a specific country
-  async getCurrenciesForCountry(id: string) {
+  // Gets single country based on id
+  async getCountry(id: string) {
     await this.getAllCountriesData();
     const country = this.countryData.find((country) => country.id === id);
     if (!country) {
       throw new Error(`Country with id ${id} not found`);
     }
-    const currencies = Object.entries(country.currencies).map(
+    const languages = Object.values(country.languages);
+    const currencies = Object.entries(country.currency).map(
       ([code, currency]) => ({
         code,
         name: (currency as Currency).name,
         symbol: (currency as Currency).symbol,
       })
     );
-    return currencies;
+    return { ...country, languages, currencies };
   }
 }

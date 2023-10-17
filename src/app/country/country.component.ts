@@ -7,11 +7,12 @@ interface CountryData {
   name: string;
   population: number;
   fifa: string;
-  capital: string;
+  capital: string[];
   region: string;
   timeZones: string;
-  currencies: string;
-  languages: string;
+  languages: string[];
+  currencies: CurrencyData[];
+  capitalLatLong: string[];
 }
 
 interface CurrencyData {
@@ -26,15 +27,20 @@ interface CurrencyData {
   styleUrls: ['./country.component.css'],
 })
 export class CountryComponent {
+  currentTime: Date = new Date();
+
   isLoading: boolean = true;
   country: CountryData | null = null;
   id: string | null = null;
-  currencies: CurrencyData[] | null = null;
 
   constructor(
     private countryDataService: CountryDataService,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    setInterval(() => {
+      this.currentTime = new Date();
+    }, 60000); // Update currentTime every minute
+  }
 
   ngOnInit() {
     this.route.paramMap.subscribe((params) => {
@@ -42,7 +48,6 @@ export class CountryComponent {
       if (this.id) {
         this.getCountry();
       }
-      this.getCurrencies();
     });
   }
 
@@ -53,12 +58,7 @@ export class CountryComponent {
     this.isLoading = false;
   }
 
-  async getCurrencies() {
-    if (this.id) {
-      this.currencies = await this.countryDataService.getCurrenciesForCountry(
-        this.id
-      );
-    }
-    console.log(this.currencies);
+  currentDate() {
+    this.currentTime = new Date();
   }
 }

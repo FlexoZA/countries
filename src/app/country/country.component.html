@@ -10,6 +10,9 @@
         <h1 class="text-gray text-xl p-4 font-bold">
           {{ country.name }}
         </h1>
+        <p class="p-4 text-gray">
+          {{ currentTime | timeFormat : "Russia/Moscow" }}
+        </p>
       </div>
       <div class="text-gray text-lg p-4">
         <h1>In favorites</h1>
@@ -19,23 +22,15 @@
 
     <!-- Info -->
     <div class="flex flex-col mt-4 lg:flex-row">
-      <!-- Column 1 -->
-      <div class="lg:flex-grow lg:border-r text-gray-800 border-gray-800 p-4">
-        <div class="flex items-center">
-          <i class="material-icons icon-large mr-2">schedule</i>
-          <span class="font-semibold">Local time</span>
-        </div>
-        <p class="text-xl font-bold mt-6">{{ country.population }}</p>
-        <hr class="lg:hidden border-t mt-4 border-gray-600" />
-      </div>
-
       <!-- Column 2 -->
       <div class="lg:flex-grow lg:border-r text-gray-800 border-gray-800 p-4">
         <div class="flex items-center">
           <i class="material-icons icon-large mr-2">groups</i>
           <span class="font-semibold">Population</span>
         </div>
-        <p class="text-xl font-bold mt-6">{{ country.population }}</p>
+        <p class="text-xl font-bold mt-6">
+          {{ country.population | numberFormat }}
+        </p>
         <hr class="lg:hidden border-t mt-4 border-gray-600" />
       </div>
 
@@ -45,7 +40,15 @@
           <i class="material-icons icon-large mr-2">sports_soccer</i>
           <span class="font-semibold">FIFA code</span>
         </div>
-        <p class="text-xl font-bold mt-6">{{ country.fifa }}</p>
+        <p
+          class="text-xl font-bold mt-6"
+          *ngIf="country.fifa; else noFifaMessage"
+        >
+          {{ country.fifa }}
+        </p>
+        <ng-template #noFifaMessage>
+          <p class="text-red-500 mt-6">No FIFA code available</p>
+        </ng-template>
         <hr class="lg:hidden border-t mt-4 border-gray-600" />
       </div>
 
@@ -71,6 +74,8 @@
     </div>
     <!-- //Info -->
 
+    <p>{{ country.capitalLatLong }}</p>
+
     <!-- Time Zones -->
     <div class="p-4 mt-6">
       <p class="text-lg">Time Zones:</p>
@@ -87,7 +92,7 @@
     <div class="p-4 mt-6">
       <p class="text-lg">Currencies:</p>
       <div
-        *ngFor="let currency of currencies"
+        *ngFor="let currency of country.currencies"
         class="inline-flex items-center px-2 mr-2 py-1 text-blue-400 ring-1 ring-inset ring-blue-500/30 mt-2"
       >
         <ul>
@@ -98,21 +103,23 @@
             <span><strong>Name:</strong> {{ currency.name }}</span>
           </li>
           <li>
-            <span><strong>Symbol:</strong> {{ currency.symbol }}</span>
+            <span
+              ><strong>Symbol: {{ currency.symbol }}</strong>
+            </span>
           </li>
         </ul>
       </div>
     </div>
     <!-- Currencies -->
 
-    <!-- Languages -->
     <div class="p-4 mt-6">
       <p class="text-lg">Languages:</p>
-      <span
+      <div
+        *ngFor="let language of country.languages"
         class="inline-flex items-center px-2 mr-2 py-1 text-blue-400 ring-1 ring-inset ring-blue-500/30 mt-2"
       >
-        lang
-      </span>
+        {{ language }}
+      </div>
     </div>
     <!-- Languages -->
   </div>
